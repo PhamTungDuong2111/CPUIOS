@@ -10,7 +10,7 @@
 		000000000000000000000002 /* CPUIOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000001 /* CPUIOSApp.swift */; };
 		000000000000000000000004 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000003 /* ContentView.swift */; };
 		000000000000000000000006 /* DeviceModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000005 /* DeviceModel.swift */; };
-		000000000000000000000008 /* DeviceDatabase.json in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000007 /* DeviceDatabase.json */; };
+		000000000000000000000008 /* DeviceDatabase.json in Resources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000007 /* DeviceDatabase.json */; };
 		00000000000000000000000A /* DeviceIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000009 /* DeviceIdentifier.swift */; };
 		00000000000000000000000C /* DeviceDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000000B /* DeviceDatabaseService.swift */; };
 		00000000000000000000000E /* SystemInfoService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000000D /* SystemInfoService.swift */; };
@@ -25,19 +25,19 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		000000000000000000000001 /* CPUIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CPU-IOS/CPUIOSApp.swift"; sourceTree = "<group>"; };
-		000000000000000000000003 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CPU-IOS/ContentView.swift"; sourceTree = "<group>"; };
-		000000000000000000000005 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CPU-IOS/Models/DeviceModel.swift"; sourceTree = "<group>"; };
-		000000000000000000000007 /* DeviceDatabase.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "CPU-IOS/Models/DeviceDatabase.json"; sourceTree = "<group>"; };
-		000000000000000000000009 /* DeviceIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CPU-IOS/Services/DeviceIdentifier.swift"; sourceTree = "<group>"; };
-		00000000000000000000000B /* DeviceDatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CPU-IOS/Services/DeviceDatabaseService.swift"; sourceTree = "<group>"; };
-		00000000000000000000000D /* SystemInfoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CPU-IOS/Services/SystemInfoService.swift"; sourceTree = "<group>"; };
-		00000000000000000000000F /* RefreshRateMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CPU-IOS/Services/RefreshRateMonitor.swift"; sourceTree = "<group>"; };
-		000000000000000000000011 /* BatteryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CPU-IOS/Services/BatteryService.swift"; sourceTree = "<group>"; };
-		000000000000000000000013 /* DisplayHzView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CPU-IOS/Views/DisplayHzView.swift"; sourceTree = "<group>"; };
-		000000000000000000000015 /* DeviceInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CPU-IOS/Views/DeviceInfoView.swift"; sourceTree = "<group>"; };
-		000000000000000000000017 /* CPUMemoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CPU-IOS/Views/CPUMemoryView.swift"; sourceTree = "<group>"; };
-		000000000000000000000019 /* BatteryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CPU-IOS/Views/BatteryView.swift"; sourceTree = "<group>"; };
+		000000000000000000000001 /* CPUIOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CPUIOSApp.swift"; sourceTree = "<group>"; };
+		000000000000000000000003 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentView.swift"; sourceTree = "<group>"; };
+		000000000000000000000005 /* DeviceModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeviceModel.swift"; sourceTree = "<group>"; };
+		000000000000000000000007 /* DeviceDatabase.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "DeviceDatabase.json"; sourceTree = "<group>"; };
+		000000000000000000000009 /* DeviceIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeviceIdentifier.swift"; sourceTree = "<group>"; };
+		00000000000000000000000B /* DeviceDatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeviceDatabaseService.swift"; sourceTree = "<group>"; };
+		00000000000000000000000D /* SystemInfoService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SystemInfoService.swift"; sourceTree = "<group>"; };
+		00000000000000000000000F /* RefreshRateMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RefreshRateMonitor.swift"; sourceTree = "<group>"; };
+		000000000000000000000011 /* BatteryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BatteryService.swift"; sourceTree = "<group>"; };
+		000000000000000000000013 /* DisplayHzView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DisplayHzView.swift"; sourceTree = "<group>"; };
+		000000000000000000000015 /* DeviceInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DeviceInfoView.swift"; sourceTree = "<group>"; };
+		000000000000000000000017 /* CPUMemoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CPUMemoryView.swift"; sourceTree = "<group>"; };
+		000000000000000000000019 /* BatteryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BatteryView.swift"; sourceTree = "<group>"; };
 		00000000000000000000001B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Assets.xcassets"; sourceTree = "<group>"; };
 		00000000000000000000001D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		00000000000000000000001F /* CPU-IOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CPU-IOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -183,6 +183,7 @@
 			files = (
 				00000000000000000000001C /* Assets.xcassets in Resources */,
 				00000000000000000000001E /* Preview Assets.xcassets in Resources */,
+				000000000000000000000008 /* DeviceDatabase.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -196,7 +197,6 @@
 				000000000000000000000002 /* CPUIOSApp.swift in Sources */,
 				000000000000000000000004 /* ContentView.swift in Sources */,
 				000000000000000000000006 /* DeviceModel.swift in Sources */,
-				000000000000000000000008 /* DeviceDatabase.json in Sources */,
 				00000000000000000000000A /* DeviceIdentifier.swift in Sources */,
 				00000000000000000000000C /* DeviceDatabaseService.swift in Sources */,
 				00000000000000000000000E /* SystemInfoService.swift in Sources */,
