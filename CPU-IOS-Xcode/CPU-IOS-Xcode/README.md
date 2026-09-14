@@ -12,7 +12,8 @@ thực (Hz)** — giống video ProMotion nhảy 60 ⇄ 120Hz mà bạn gửi.
 
 | Tab | Nội dung | API dùng |
 |---|---|---|
-| **Display Hz** (cốt lõi) | Đo Hz thực tế của màn hình theo thời gian thực, min/max/hiện tại, phát hiện ProMotion, có animation "kích hoạt" để màn hình tăng tốc độ quét | `CADisplayLink`, `UIScreen.maximumFramesPerSecond` |
+| **Display Hz** (cốt lõi) | Đo Hz thực tế của màn hình theo thời gian thực, min/max/hiện tại, phát hiện ProMotion | `CADisplayLink`, `UIScreen.maximumFramesPerSecond` |
+| **Cửa sổ nổi PiP** (theo video) | Cửa sổ nhỏ nổi trên màn hình chính đo FPS 60 ⇄ 120Hz theo thao tác vuốt, CPU %, RAM %, tốc độ mạng, xung nhịp Freq (4046MHz) | `AVPictureInPictureVideoCallViewController`, `AVAudioSession` |
 | Device Info | Model identifier (vd `iPhone16,2`), tên thương mại, chip, tiến trình, tra từ database nội bộ | `uname()/sysctlbyname("hw.machine")` + JSON lookup |
 | CPU & RAM | Số nhân CPU, % CPU dùng, RAM tổng/dùng/free | `sysctl(hw.ncpu)`, `host_processor_info`, `host_statistics64` |
 | Battery | % pin, trạng thái sạc | `UIDevice.current` |

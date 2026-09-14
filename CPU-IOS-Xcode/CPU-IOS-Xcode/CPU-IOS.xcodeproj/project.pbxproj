@@ -22,6 +22,9 @@
 		00000000000000000000001A /* BatteryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000019 /* BatteryView.swift */; };
 		00000000000000000000001C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000001B /* Assets.xcassets */; };
 		00000000000000000000001E /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00000000000000000000001D /* Preview Assets.xcassets */; };
+		000000000000000000000042 /* NetworkSpeedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000041 /* NetworkSpeedService.swift */; };
+		000000000000000000000044 /* PiPFloatingMonitorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000043 /* PiPFloatingMonitorManager.swift */; };
+		000000000000000000000046 /* FloatingMonitorHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000045 /* FloatingMonitorHUDView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -41,6 +44,9 @@
 		00000000000000000000001B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Assets.xcassets"; sourceTree = "<group>"; };
 		00000000000000000000001D /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		00000000000000000000001F /* CPU-IOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CPU-IOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		000000000000000000000041 /* NetworkSpeedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkSpeedService.swift"; sourceTree = "<group>"; };
+		000000000000000000000043 /* PiPFloatingMonitorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PiPFloatingMonitorManager.swift"; sourceTree = "<group>"; };
+		000000000000000000000045 /* FloatingMonitorHUDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FloatingMonitorHUDView.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +77,8 @@
 				00000000000000000000000D /* SystemInfoService.swift */,
 				00000000000000000000000F /* RefreshRateMonitor.swift */,
 				000000000000000000000011 /* BatteryService.swift */,
+				000000000000000000000041 /* NetworkSpeedService.swift */,
+				000000000000000000000043 /* PiPFloatingMonitorManager.swift */,
 			);
 			path = "Services";
 			sourceTree = "<group>";
@@ -82,6 +90,7 @@
 				000000000000000000000015 /* DeviceInfoView.swift */,
 				000000000000000000000017 /* CPUMemoryView.swift */,
 				000000000000000000000019 /* BatteryView.swift */,
+				000000000000000000000045 /* FloatingMonitorHUDView.swift */,
 			);
 			path = "Views";
 			sourceTree = "<group>";
@@ -206,6 +215,9 @@
 				000000000000000000000016 /* DeviceInfoView.swift in Sources */,
 				000000000000000000000018 /* CPUMemoryView.swift in Sources */,
 				00000000000000000000001A /* BatteryView.swift in Sources */,
+				000000000000000000000042 /* NetworkSpeedService.swift in Sources */,
+				000000000000000000000044 /* PiPFloatingMonitorManager.swift in Sources */,
+				000000000000000000000046 /* FloatingMonitorHUDView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,6 +354,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIBackgroundModes = "audio";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
@@ -372,6 +385,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UIBackgroundModes = "audio";
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
