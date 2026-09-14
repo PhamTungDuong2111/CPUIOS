@@ -1,0 +1,82 @@
+[
+  {
+    "identifier": "iPhone14,2",
+    "marketingName": "iPhone 13 Pro",
+    "chip": "Apple A15 Bionic",
+    "process": "TSMC 5nm (N5P)",
+    "maxClockGHz": 3.23,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone14,3",
+    "marketingName": "iPhone 13 Pro Max",
+    "chip": "Apple A15 Bionic",
+    "process": "TSMC 5nm (N5P)",
+    "maxClockGHz": 3.23,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone15,2",
+    "marketingName": "iPhone 14 Pro",
+    "chip": "Apple A16 Bionic",
+    "process": "TSMC 4nm (N4)",
+    "maxClockGHz": 3.46,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone15,3",
+    "marketingName": "iPhone 14 Pro Max",
+    "chip": "Apple A16 Bionic",
+    "process": "TSMC 4nm (N4)",
+    "maxClockGHz": 3.46,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone16,1",
+    "marketingName": "iPhone 15 Pro",
+    "chip": "Apple A17 Pro",
+    "process": "TSMC 3nm (N3B)",
+    "maxClockGHz": 3.78,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone16,2",
+    "marketingName": "iPhone 15 Pro Max",
+    "chip": "Apple A17 Pro",
+    "process": "TSMC 3nm (N3B)",
+    "maxClockGHz": 3.78,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone17,1",
+    "marketingName": "iPhone 16 Pro",
+    "chip": "Apple A18 Pro",
+    "process": "TSMC 3nm (N3E)",
+    "maxClockGHz": 4.04,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone17,2",
+    "marketingName": "iPhone 16 Pro Max",
+    "chip": "Apple A18 Pro",
+    "process": "TSMC 3nm (N3E)",
+    "maxClockGHz": 4.04,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone15,4",
+    "marketingName": "iPhone 15",
+    "chip": "Apple A16 Bionic",
+    "process": "TSMC 4nm (N4)",
+    "maxClockGHz": 3.46,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone17,3",
+    "marketingName": "iPhone 16",
+    "chip": "Apple A18",
+    "process": "TSMC 3nm (N3E)",
+    "maxClockGHz": 3.9,
+    "maxRefreshRateHz": 60
+  }
+]
