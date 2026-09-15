@@ -30,7 +30,9 @@ final class FloatingMonitorData: ObservableObject {
     func refreshHardwareInfo() {
         let identifier = DeviceIdentifier.hardwareIdentifier()
         let device = DeviceDatabaseService.shared.lookup(identifier: identifier)
-        if device.identifier == "iPhone17,1" || device.identifier == "iPhone17,2" {
+        if device.identifier.hasPrefix("iPhone18,") {
+            self.cpuFreqMHz = 4250
+        } else if device.identifier == "iPhone17,1" || device.identifier == "iPhone17,2" {
             self.cpuFreqMHz = 4046
         } else if device.maxClockGHz > 0 {
             self.cpuFreqMHz = Int(round(device.maxClockGHz * 1000))

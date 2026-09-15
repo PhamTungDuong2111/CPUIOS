@@ -1,5 +1,37 @@
 [
   {
+    "identifier": "iPhone18,2",
+    "marketingName": "iPhone 17 Pro Max",
+    "chip": "Apple A19 Pro",
+    "process": "TSMC 3nm (N3P)",
+    "maxClockGHz": 4.25,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone18,1",
+    "marketingName": "iPhone 17 Pro",
+    "chip": "Apple A19 Pro",
+    "process": "TSMC 3nm (N3P)",
+    "maxClockGHz": 4.25,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone18,4",
+    "marketingName": "iPhone 17 Air",
+    "chip": "Apple A19",
+    "process": "TSMC 3nm (N3P)",
+    "maxClockGHz": 4.25,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone18,3",
+    "marketingName": "iPhone 17",
+    "chip": "Apple A19",
+    "process": "TSMC 3nm (N3P)",
+    "maxClockGHz": 4.25,
+    "maxRefreshRateHz": 120
+  },
+  {
     "identifier": "iPhone17,2",
     "marketingName": "iPhone 16 Pro Max",
     "chip": "Apple A18 Pro",
@@ -26,6 +58,14 @@
   {
     "identifier": "iPhone17,3",
     "marketingName": "iPhone 16",
+    "chip": "Apple A18",
+    "process": "TSMC 3nm (N3E)",
+    "maxClockGHz": 4.04,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone17,5",
+    "marketingName": "iPhone 16e",
     "chip": "Apple A18",
     "process": "TSMC 3nm (N3E)",
     "maxClockGHz": 4.04,
