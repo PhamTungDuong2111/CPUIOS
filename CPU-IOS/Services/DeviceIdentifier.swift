@@ -5,6 +5,12 @@ enum DeviceIdentifier {
     /// Đây là API POSIX công khai (sysctlbyname) — hợp lệ với App Review,
     /// KHÔNG phải private API.
     static func hardwareIdentifier() -> String {
+        #if targetEnvironment(simulator)
+        if let simModel = ProcessInfo.processInfo.environment["SIMULATOR_MODEL_IDENTIFIER"], !simModel.isEmpty {
+            return simModel
+        }
+        #endif
+
         var systemInfo = utsname()
         uname(&systemInfo)
         let machineMirror = Mirror(reflecting: systemInfo.machine)

@@ -24,7 +24,10 @@ final class FloatingMonitorData: ObservableObject {
     private var fpsSmoothingBuffer: [Double] = []
 
     private init() {
-        // Load device frequency (vd: iPhone 16 Pro Max = 4046 MHz)
+        refreshHardwareInfo()
+    }
+
+    func refreshHardwareInfo() {
         let identifier = DeviceIdentifier.hardwareIdentifier()
         let device = DeviceDatabaseService.shared.lookup(identifier: identifier)
         if device.identifier == "iPhone17,1" || device.identifier == "iPhone17,2" {
@@ -38,6 +41,7 @@ final class FloatingMonitorData: ObservableObject {
 
     func start() {
         stop()
+        refreshHardwareInfo()
         sessionStartTime = Date()
         lastDisplayTimestamp = 0
         fpsSmoothingBuffer = []
@@ -45,7 +49,7 @@ final class FloatingMonitorData: ObservableObject {
         // CADisplayLink đo FPS mượt theo tần số quét thật của màn hình (hỗ trợ 10 - 120Hz)
         let link = CADisplayLink(target: self, selector: #selector(handleDisplayFrame(_:)))
         if #available(iOS 15.0, *) {
-            let maxHz = Float(UIScreen.main.maximumFramesPerSecond)
+            let maxHz = Float(max(UIScreen.main.maximumFramesPerSecond, 120))
             link.preferredFrameRateRange = CAFrameRateRange(
                 minimum: 10,
                 maximum: maxHz,
@@ -214,11 +218,18 @@ final class PiPFloatingMonitorManager: NSObject, ObservableObject, AVPictureInPi
             let hudView = FloatingMonitorHUDView()
             let hosting = UIHostingController(rootView: hudView)
             hosting.view.backgroundColor = .clear
-            hosting.view.frame = CGRect(x: 0, y: 0, width: 220, height: 110)
 
             callVC.addChild(hosting)
             callVC.view.addSubview(hosting.view)
             hosting.didMove(toParent: callVC)
+
+            hosting.view.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                hosting.view.topAnchor.constraint(equalTo: callVC.view.topAnchor),
+                hosting.view.bottomAnchor.constraint(equalTo: callVC.view.bottomAnchor),
+                hosting.view.leadingAnchor.constraint(equalTo: callVC.view.leadingAnchor),
+                hosting.view.trailingAnchor.constraint(equalTo: callVC.view.trailingAnchor)
+            ])
 
             self.callVC = callVC
             self.hostingController = hosting
@@ -230,7 +241,8 @@ final class PiPFloatingMonitorManager: NSObject, ObservableObject, AVPictureInPi
 
             let pip = AVPictureInPictureController(contentSource: contentSource)
             pip.delegate = self
-            pip.canStartPictureInPictureAutomaticallyFromInline = true
+            // Chỉ kích hoạt tự động inline khi người dùng đã chủ động bật PiP
+            pip.canStartPictureInPictureAutomaticallyFromInline = false
             self.pipController = pip
             statusMessage = "Đã sẵn sàng mở cửa sổ nổi PiP."
         }
@@ -254,11 +266,17 @@ final class PiPFloatingMonitorManager: NSObject, ObservableObject, AVPictureInPi
         SilentAudioPlayer.shared.start()
         FloatingMonitorData.shared.start()
 
+        if #available(iOS 15.0, *) {
+            pip.canStartPictureInPictureAutomaticallyFromInline = true
+        }
         pip.startPictureInPicture()
         statusMessage = "Đang kích hoạt PiP..."
     }
 
     func stopPiP() {
+        if #available(iOS 15.0, *) {
+            pipController?.canStartPictureInPictureAutomaticallyFromInline = false
+        }
         pipController?.stopPictureInPicture()
         SilentAudioPlayer.shared.stop()
         FloatingMonitorData.shared.stop()

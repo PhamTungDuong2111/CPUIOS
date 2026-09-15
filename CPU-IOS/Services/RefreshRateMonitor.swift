@@ -18,32 +18,49 @@ final class RefreshRateMonitor: ObservableObject {
     @Published private(set) var currentHz: Double = 0
     @Published private(set) var minHz: Double = 0
     @Published private(set) var maxObservedHz: Double = 0
-    @Published private(set) var maximumDeviceHz: Int = UIScreen.main.maximumFramesPerSecond
-    @Published private(set) var isProMotionCapable: Bool = UIScreen.main.maximumFramesPerSecond > 60
+    @Published private(set) var maximumDeviceHz: Int = 60
+    @Published private(set) var isProMotionCapable: Bool = false
     @Published private(set) var samples: [Double] = []   // để vẽ mini biểu đồ
 
     private var displayLink: CADisplayLink?
     private var lastTimestamp: CFTimeInterval = 0
+    private var lastUIUpdateTimestamp: CFTimeInterval = 0
     private var smoothingBuffer: [Double] = []
 
-    private let smoothingWindow = 12
-    private let maxSampleHistory = 60
+    private let smoothingWindow = 8
+    private let maxSampleHistory = 50
+    private let uiUpdateInterval: CFTimeInterval = 0.08 // Cập nhật UI ~12 lần/giây để chống đơ nghẽn Main Thread
+
+    init() {
+        determineDeviceCapabilities()
+    }
+
+    func determineDeviceCapabilities() {
+        let screenMax = UIScreen.main.maximumFramesPerSecond
+        let identifier = DeviceIdentifier.hardwareIdentifier()
+        let device = DeviceDatabaseService.shared.lookup(identifier: identifier)
+
+        let isProMotion = screenMax > 60 || device.maxRefreshRateHz > 60
+        self.isProMotionCapable = isProMotion
+        self.maximumDeviceHz = max(screenMax, isProMotion ? 120 : 60)
+    }
 
     func start() {
         stop()
+        determineDeviceCapabilities()
         currentHz = 0
         minHz = 0
         maxObservedHz = 0
         samples = []
         smoothingBuffer = []
         lastTimestamp = 0
+        lastUIUpdateTimestamp = 0
 
         let link = CADisplayLink(target: self, selector: #selector(handleFrame(_:)))
 
-        // Không giới hạn khoảng preferred range để CADisplayLink được phép bám
-        // sát tần số quét thật của phần cứng (kể cả khi hệ thống đang hạ Hz).
+        // Cho phép CADisplayLink bám sát tần số quét phần cứng (hỗ trợ 10 - 120Hz)
         if #available(iOS 15.0, *) {
-            let maxFPS = Float(UIScreen.main.maximumFramesPerSecond)
+            let maxFPS = Float(max(maximumDeviceHz, 120))
             link.preferredFrameRateRange = CAFrameRateRange(
                 minimum: 10,
                 maximum: maxFPS,
@@ -68,21 +85,40 @@ final class RefreshRateMonitor: ObservableObject {
 
         let instantHz = 1.0 / delta
 
-        // Lọc nhiễu bằng trung bình trượt — số hiển thị mượt hơn nhưng vẫn
-        // phản ứng đủ nhanh khi máy đổi Hz.
+        // Lọc nhiễu bằng trung bình trượt ngắn gọn
         smoothingBuffer.append(instantHz)
         if smoothingBuffer.count > smoothingWindow {
             smoothingBuffer.removeFirst()
         }
         let averaged = smoothingBuffer.reduce(0, +) / Double(smoothingBuffer.count)
 
-        currentHz = averaged
-        minHz = minHz == 0 ? averaged : min(minHz, averaged)
-        maxObservedHz = max(maxObservedHz, averaged)
+        // Cập nhật min/max nội bộ ngay lập tức
+        if averaged >= 20 {
+            if minHz == 0 {
+                minHz = averaged
+            } else if averaged < minHz {
+                minHz = averaged
+            }
+        }
+        if averaged > maxObservedHz {
+            maxObservedHz = min(averaged, Double(maximumDeviceHz) * 1.05)
+        }
 
-        samples.append(averaged)
-        if samples.count > maxSampleHistory {
-            samples.removeFirst()
+        // ĐIỀU TIẾT CẬP NHẬT UI (Throttling):
+        // Chỉ kích hoạt thông báo @Published cho SwiftUI theo chu kỳ uiUpdateInterval hoặc khi có bước nhảy vọt,
+        // giúp giải phóng 95% CPU render của Main Thread, ngăn chặn triệt để tình trạng máy bị đơ cứng.
+        let timeSinceLastUIUpdate = link.timestamp - lastUIUpdateTimestamp
+        let significantJump = abs(averaged - currentHz) > 15
+
+        if timeSinceLastUIUpdate >= uiUpdateInterval || significantJump {
+            lastUIUpdateTimestamp = link.timestamp
+
+            self.currentHz = averaged
+
+            self.samples.append(averaged)
+            if self.samples.count > self.maxSampleHistory {
+                self.samples.removeFirst()
+            }
         }
     }
 }

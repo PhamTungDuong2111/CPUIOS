@@ -1,50 +1,10 @@
 [
   {
-    "identifier": "iPhone14,2",
-    "marketingName": "iPhone 13 Pro",
-    "chip": "Apple A15 Bionic",
-    "process": "TSMC 5nm (N5P)",
-    "maxClockGHz": 3.23,
-    "maxRefreshRateHz": 120
-  },
-  {
-    "identifier": "iPhone14,3",
-    "marketingName": "iPhone 13 Pro Max",
-    "chip": "Apple A15 Bionic",
-    "process": "TSMC 5nm (N5P)",
-    "maxClockGHz": 3.23,
-    "maxRefreshRateHz": 120
-  },
-  {
-    "identifier": "iPhone15,2",
-    "marketingName": "iPhone 14 Pro",
-    "chip": "Apple A16 Bionic",
-    "process": "TSMC 4nm (N4)",
-    "maxClockGHz": 3.46,
-    "maxRefreshRateHz": 120
-  },
-  {
-    "identifier": "iPhone15,3",
-    "marketingName": "iPhone 14 Pro Max",
-    "chip": "Apple A16 Bionic",
-    "process": "TSMC 4nm (N4)",
-    "maxClockGHz": 3.46,
-    "maxRefreshRateHz": 120
-  },
-  {
-    "identifier": "iPhone16,1",
-    "marketingName": "iPhone 15 Pro",
-    "chip": "Apple A17 Pro",
-    "process": "TSMC 3nm (N3B)",
-    "maxClockGHz": 3.78,
-    "maxRefreshRateHz": 120
-  },
-  {
-    "identifier": "iPhone16,2",
-    "marketingName": "iPhone 15 Pro Max",
-    "chip": "Apple A17 Pro",
-    "process": "TSMC 3nm (N3B)",
-    "maxClockGHz": 3.78,
+    "identifier": "iPhone17,2",
+    "marketingName": "iPhone 16 Pro Max",
+    "chip": "Apple A18 Pro",
+    "process": "TSMC 3nm (N3E)",
+    "maxClockGHz": 4.04,
     "maxRefreshRateHz": 120
   },
   {
@@ -56,12 +16,44 @@
     "maxRefreshRateHz": 120
   },
   {
-    "identifier": "iPhone17,2",
-    "marketingName": "iPhone 16 Pro Max",
-    "chip": "Apple A18 Pro",
+    "identifier": "iPhone17,4",
+    "marketingName": "iPhone 16 Plus",
+    "chip": "Apple A18",
     "process": "TSMC 3nm (N3E)",
     "maxClockGHz": 4.04,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone17,3",
+    "marketingName": "iPhone 16",
+    "chip": "Apple A18",
+    "process": "TSMC 3nm (N3E)",
+    "maxClockGHz": 4.04,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone16,2",
+    "marketingName": "iPhone 15 Pro Max",
+    "chip": "Apple A17 Pro",
+    "process": "TSMC 3nm (N3B)",
+    "maxClockGHz": 3.78,
     "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone16,1",
+    "marketingName": "iPhone 15 Pro",
+    "chip": "Apple A17 Pro",
+    "process": "TSMC 3nm (N3B)",
+    "maxClockGHz": 3.78,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone15,5",
+    "marketingName": "iPhone 15 Plus",
+    "chip": "Apple A16 Bionic",
+    "process": "TSMC 4nm (N4)",
+    "maxClockGHz": 3.46,
+    "maxRefreshRateHz": 60
   },
   {
     "identifier": "iPhone15,4",
@@ -72,11 +64,523 @@
     "maxRefreshRateHz": 60
   },
   {
-    "identifier": "iPhone17,3",
-    "marketingName": "iPhone 16",
-    "chip": "Apple A18",
-    "process": "TSMC 3nm (N3E)",
-    "maxClockGHz": 3.9,
+    "identifier": "iPhone15,3",
+    "marketingName": "iPhone 14 Pro Max",
+    "chip": "Apple A16 Bionic",
+    "process": "TSMC 4nm (N4)",
+    "maxClockGHz": 3.46,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone15,2",
+    "marketingName": "iPhone 14 Pro",
+    "chip": "Apple A16 Bionic",
+    "process": "TSMC 4nm (N4)",
+    "maxClockGHz": 3.46,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone14,8",
+    "marketingName": "iPhone 14 Plus",
+    "chip": "Apple A15 Bionic",
+    "process": "TSMC 5nm (N5P)",
+    "maxClockGHz": 3.23,
     "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone14,7",
+    "marketingName": "iPhone 14",
+    "chip": "Apple A15 Bionic",
+    "process": "TSMC 5nm (N5P)",
+    "maxClockGHz": 3.23,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone14,6",
+    "marketingName": "iPhone SE (3rd generation)",
+    "chip": "Apple A15 Bionic",
+    "process": "TSMC 5nm (N5P)",
+    "maxClockGHz": 3.23,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone14,3",
+    "marketingName": "iPhone 13 Pro Max",
+    "chip": "Apple A15 Bionic",
+    "process": "TSMC 5nm (N5P)",
+    "maxClockGHz": 3.23,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone14,2",
+    "marketingName": "iPhone 13 Pro",
+    "chip": "Apple A15 Bionic",
+    "process": "TSMC 5nm (N5P)",
+    "maxClockGHz": 3.23,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPhone14,5",
+    "marketingName": "iPhone 13",
+    "chip": "Apple A15 Bionic",
+    "process": "TSMC 5nm (N5P)",
+    "maxClockGHz": 3.23,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone14,4",
+    "marketingName": "iPhone 13 mini",
+    "chip": "Apple A15 Bionic",
+    "process": "TSMC 5nm (N5P)",
+    "maxClockGHz": 3.23,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone13,4",
+    "marketingName": "iPhone 12 Pro Max",
+    "chip": "Apple A14 Bionic",
+    "process": "TSMC 5nm (N5)",
+    "maxClockGHz": 3.10,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone13,3",
+    "marketingName": "iPhone 12 Pro",
+    "chip": "Apple A14 Bionic",
+    "process": "TSMC 5nm (N5)",
+    "maxClockGHz": 3.10,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone13,2",
+    "marketingName": "iPhone 12",
+    "chip": "Apple A14 Bionic",
+    "process": "TSMC 5nm (N5)",
+    "maxClockGHz": 3.10,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone13,1",
+    "marketingName": "iPhone 12 mini",
+    "chip": "Apple A14 Bionic",
+    "process": "TSMC 5nm (N5)",
+    "maxClockGHz": 3.10,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone12,8",
+    "marketingName": "iPhone SE (2nd generation)",
+    "chip": "Apple A13 Bionic",
+    "process": "TSMC 7nm (N7P)",
+    "maxClockGHz": 2.66,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone12,5",
+    "marketingName": "iPhone 11 Pro Max",
+    "chip": "Apple A13 Bionic",
+    "process": "TSMC 7nm (N7P)",
+    "maxClockGHz": 2.66,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone12,3",
+    "marketingName": "iPhone 11 Pro",
+    "chip": "Apple A13 Bionic",
+    "process": "TSMC 7nm (N7P)",
+    "maxClockGHz": 2.66,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone12,1",
+    "marketingName": "iPhone 11",
+    "chip": "Apple A13 Bionic",
+    "process": "TSMC 7nm (N7P)",
+    "maxClockGHz": 2.66,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone11,8",
+    "marketingName": "iPhone XR",
+    "chip": "Apple A12 Bionic",
+    "process": "TSMC 7nm (N7)",
+    "maxClockGHz": 2.49,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone11,6",
+    "marketingName": "iPhone XS Max",
+    "chip": "Apple A12 Bionic",
+    "process": "TSMC 7nm (N7)",
+    "maxClockGHz": 2.49,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone11,4",
+    "marketingName": "iPhone XS Max (China)",
+    "chip": "Apple A12 Bionic",
+    "process": "TSMC 7nm (N7)",
+    "maxClockGHz": 2.49,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone11,2",
+    "marketingName": "iPhone XS",
+    "chip": "Apple A12 Bionic",
+    "process": "TSMC 7nm (N7)",
+    "maxClockGHz": 2.49,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone10,6",
+    "marketingName": "iPhone X (GSM)",
+    "chip": "Apple A11 Bionic",
+    "process": "TSMC 10nm",
+    "maxClockGHz": 2.39,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone10,3",
+    "marketingName": "iPhone X (Global)",
+    "chip": "Apple A11 Bionic",
+    "process": "TSMC 10nm",
+    "maxClockGHz": 2.39,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone10,5",
+    "marketingName": "iPhone 8 Plus (GSM)",
+    "chip": "Apple A11 Bionic",
+    "process": "TSMC 10nm",
+    "maxClockGHz": 2.39,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone10,2",
+    "marketingName": "iPhone 8 Plus (Global)",
+    "chip": "Apple A11 Bionic",
+    "process": "TSMC 10nm",
+    "maxClockGHz": 2.39,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone10,4",
+    "marketingName": "iPhone 8 (GSM)",
+    "chip": "Apple A11 Bionic",
+    "process": "TSMC 10nm",
+    "maxClockGHz": 2.39,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone10,1",
+    "marketingName": "iPhone 8 (Global)",
+    "chip": "Apple A11 Bionic",
+    "process": "TSMC 10nm",
+    "maxClockGHz": 2.39,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone9,4",
+    "marketingName": "iPhone 7 Plus (GSM)",
+    "chip": "Apple A10 Fusion",
+    "process": "TSMC 16nm",
+    "maxClockGHz": 2.34,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone9,2",
+    "marketingName": "iPhone 7 Plus (Global)",
+    "chip": "Apple A10 Fusion",
+    "process": "TSMC 16nm",
+    "maxClockGHz": 2.34,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone9,3",
+    "marketingName": "iPhone 7 (GSM)",
+    "chip": "Apple A10 Fusion",
+    "process": "TSMC 16nm",
+    "maxClockGHz": 2.34,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone9,1",
+    "marketingName": "iPhone 7 (Global)",
+    "chip": "Apple A10 Fusion",
+    "process": "TSMC 16nm",
+    "maxClockGHz": 2.34,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone8,4",
+    "marketingName": "iPhone SE (1st generation)",
+    "chip": "Apple A9",
+    "process": "TSMC 16nm / Samsung 14nm",
+    "maxClockGHz": 1.85,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone8,2",
+    "marketingName": "iPhone 6s Plus",
+    "chip": "Apple A9",
+    "process": "TSMC 16nm / Samsung 14nm",
+    "maxClockGHz": 1.85,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone8,1",
+    "marketingName": "iPhone 6s",
+    "chip": "Apple A9",
+    "process": "TSMC 16nm / Samsung 14nm",
+    "maxClockGHz": 1.85,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone7,1",
+    "marketingName": "iPhone 6 Plus",
+    "chip": "Apple A8",
+    "process": "TSMC 20nm",
+    "maxClockGHz": 1.40,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone7,2",
+    "marketingName": "iPhone 6",
+    "chip": "Apple A8",
+    "process": "TSMC 20nm",
+    "maxClockGHz": 1.40,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone6,2",
+    "marketingName": "iPhone 5s (Global)",
+    "chip": "Apple A7",
+    "process": "Samsung 28nm (HKMG)",
+    "maxClockGHz": 1.30,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone6,1",
+    "marketingName": "iPhone 5s (GSM)",
+    "chip": "Apple A7",
+    "process": "Samsung 28nm (HKMG)",
+    "maxClockGHz": 1.30,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone5,4",
+    "marketingName": "iPhone 5c (Global)",
+    "chip": "Apple A6",
+    "process": "Samsung 32nm (HKMG)",
+    "maxClockGHz": 1.30,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone5,3",
+    "marketingName": "iPhone 5c (GSM)",
+    "chip": "Apple A6",
+    "process": "Samsung 32nm (HKMG)",
+    "maxClockGHz": 1.30,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone5,2",
+    "marketingName": "iPhone 5 (Global)",
+    "chip": "Apple A6",
+    "process": "Samsung 32nm (HKMG)",
+    "maxClockGHz": 1.30,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone5,1",
+    "marketingName": "iPhone 5 (GSM)",
+    "chip": "Apple A6",
+    "process": "Samsung 32nm (HKMG)",
+    "maxClockGHz": 1.30,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone4,1",
+    "marketingName": "iPhone 4S",
+    "chip": "Apple A5",
+    "process": "Samsung 45nm",
+    "maxClockGHz": 0.80,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone3,3",
+    "marketingName": "iPhone 4 (CDMA)",
+    "chip": "Apple A4",
+    "process": "Samsung 45nm",
+    "maxClockGHz": 0.80,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone3,2",
+    "marketingName": "iPhone 4 (GSM Rev A)",
+    "chip": "Apple A4",
+    "process": "Samsung 45nm",
+    "maxClockGHz": 0.80,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone3,1",
+    "marketingName": "iPhone 4 (GSM)",
+    "chip": "Apple A4",
+    "process": "Samsung 45nm",
+    "maxClockGHz": 0.80,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone2,1",
+    "marketingName": "iPhone 3GS",
+    "chip": "Samsung S5PC100",
+    "process": "Samsung 65nm",
+    "maxClockGHz": 0.60,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone1,2",
+    "marketingName": "iPhone 3G",
+    "chip": "Samsung S5L8900",
+    "process": "Samsung 90nm",
+    "maxClockGHz": 0.41,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPhone1,1",
+    "marketingName": "iPhone (1st generation)",
+    "chip": "Samsung S5L8900",
+    "process": "Samsung 90nm",
+    "maxClockGHz": 0.41,
+    "maxRefreshRateHz": 60
+  },
+  {
+    "identifier": "iPad16,6",
+    "marketingName": "iPad Pro 13-inch (M4 Cellular)",
+    "chip": "Apple M4",
+    "process": "TSMC 3nm (N3E)",
+    "maxClockGHz": 4.40,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad16,5",
+    "marketingName": "iPad Pro 13-inch (M4 Wi-Fi)",
+    "chip": "Apple M4",
+    "process": "TSMC 3nm (N3E)",
+    "maxClockGHz": 4.40,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad16,4",
+    "marketingName": "iPad Pro 11-inch (M4 Cellular)",
+    "chip": "Apple M4",
+    "process": "TSMC 3nm (N3E)",
+    "maxClockGHz": 4.40,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad16,3",
+    "marketingName": "iPad Pro 11-inch (M4 Wi-Fi)",
+    "chip": "Apple M4",
+    "process": "TSMC 3nm (N3E)",
+    "maxClockGHz": 4.40,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad14,6",
+    "marketingName": "iPad Pro 12.9-inch (6th gen Cellular)",
+    "chip": "Apple M2",
+    "process": "TSMC 5nm (N5P)",
+    "maxClockGHz": 3.49,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad14,5",
+    "marketingName": "iPad Pro 12.9-inch (6th gen Wi-Fi)",
+    "chip": "Apple M2",
+    "process": "TSMC 5nm (N5P)",
+    "maxClockGHz": 3.49,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad14,4",
+    "marketingName": "iPad Pro 11-inch (4th gen Cellular)",
+    "chip": "Apple M2",
+    "process": "TSMC 5nm (N5P)",
+    "maxClockGHz": 3.49,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad14,3",
+    "marketingName": "iPad Pro 11-inch (4th gen Wi-Fi)",
+    "chip": "Apple M2",
+    "process": "TSMC 5nm (N5P)",
+    "maxClockGHz": 3.49,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad13,11",
+    "marketingName": "iPad Pro 12.9-inch (5th gen Cellular)",
+    "chip": "Apple M1",
+    "process": "TSMC 5nm",
+    "maxClockGHz": 3.20,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad13,8",
+    "marketingName": "iPad Pro 12.9-inch (5th gen Wi-Fi)",
+    "chip": "Apple M1",
+    "process": "TSMC 5nm",
+    "maxClockGHz": 3.20,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad13,6",
+    "marketingName": "iPad Pro 11-inch (3rd gen Cellular)",
+    "chip": "Apple M1",
+    "process": "TSMC 5nm",
+    "maxClockGHz": 3.20,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad13,4",
+    "marketingName": "iPad Pro 11-inch (3rd gen Wi-Fi)",
+    "chip": "Apple M1",
+    "process": "TSMC 5nm",
+    "maxClockGHz": 3.20,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad8,10",
+    "marketingName": "iPad Pro 11-inch (2nd gen Cellular)",
+    "chip": "Apple A12Z Bionic",
+    "process": "TSMC 7nm",
+    "maxClockGHz": 2.49,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad8,9",
+    "marketingName": "iPad Pro 11-inch (2nd gen Wi-Fi)",
+    "chip": "Apple A12Z Bionic",
+    "process": "TSMC 7nm",
+    "maxClockGHz": 2.49,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad8,12",
+    "marketingName": "iPad Pro 12.9-inch (4th gen Cellular)",
+    "chip": "Apple A12Z Bionic",
+    "process": "TSMC 7nm",
+    "maxClockGHz": 2.49,
+    "maxRefreshRateHz": 120
+  },
+  {
+    "identifier": "iPad8,11",
+    "marketingName": "iPad Pro 12.9-inch (4th gen Wi-Fi)",
+    "chip": "Apple A12Z Bionic",
+    "process": "TSMC 7nm",
+    "maxClockGHz": 2.49,
+    "maxRefreshRateHz": 120
   }
 ]

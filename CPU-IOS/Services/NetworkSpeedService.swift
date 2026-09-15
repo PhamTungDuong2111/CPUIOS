@@ -83,6 +83,9 @@ final class NetworkSpeedService {
         var totalTx: UInt64 = 0
 
         for ptr in sequence(first: firstAddr, next: { $0.pointee.ifa_next }) {
+            guard let addr = ptr.pointee.ifa_addr, addr.pointee.sa_family == UInt8(AF_LINK) else {
+                continue
+            }
             let name = String(cString: ptr.pointee.ifa_name)
             // en0 = Wi-Fi, pdp_ip0/1/2 = Cellular
             if name.hasPrefix("en") || name.hasPrefix("pdp_ip") {
