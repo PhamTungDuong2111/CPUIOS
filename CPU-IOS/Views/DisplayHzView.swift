@@ -1,7 +1,7 @@
 import SwiftUI
 
 /// Tab CỐT LÕI: Đo tần số quét màn hình (Hz) theo thời gian thực (tối đa 120Hz).
-/// Tích hợp đồng hồ đo trực quan, bài test kích hoạt 120Hz và hỗ trợ PiP.
+/// Tích hợp đồng hồ đo trực quan, bài test kích hoạt 120Hz và hỗ trợ PiP QUÉT TẦN SỐ HZ.
 struct DisplayHzView: View {
     @StateObject private var monitor = RefreshRateMonitor()
     @StateObject private var pipManager = PiPFloatingMonitorManager.shared
@@ -29,7 +29,7 @@ struct DisplayHzView: View {
                     quickTestCard
                         .padding(.horizontal)
 
-                    // MARK: - Cửa sổ nổi PiP (Giống video demo)
+                    // MARK: - Cửa sổ nổi PiP (Quét tần số Hz trên màn hình chính)
                     pipControlCard
                         .padding(.horizontal)
 
@@ -111,9 +111,13 @@ struct DisplayHzView: View {
             .onAppear {
                 BatteryService.enableMonitoring()
                 monitor.start()
+                FloatingMonitorData.shared.start()
             }
             .onDisappear {
                 monitor.stop()
+                if !pipManager.isPiPActive {
+                    FloatingMonitorData.shared.stop()
+                }
             }
         }
     }
@@ -280,7 +284,7 @@ struct DisplayHzView: View {
         }
     }
 
-    // MARK: - PiP Control Card
+    // MARK: - PiP Control Card (Quét tần số Hz trên cửa sổ nổi)
     private var pipControlCard: some View {
         VStack(spacing: 14) {
             HStack {
@@ -288,10 +292,10 @@ struct DisplayHzView: View {
                     HStack(spacing: 6) {
                         Image(systemName: "pip.fill")
                             .foregroundColor(.green)
-                        Text(lang.tr("Cửa Sổ Nổi PiP (Đo Ngoài Màn Hình)", "Floating PiP Monitor"))
+                        Text(lang.tr("Cửa Sổ Nổi PiP (Quét Tần Số Hz)", "Floating PiP (Hz Scanner)"))
                             .font(.headline)
                     }
-                    Text(lang.tr("Nổi trên màn hình chính đo FPS 60 ⇄ 120Hz", "Floating overlay measuring 60 ⇄ 120 FPS"))
+                    Text(lang.tr("Nổi ngoài màn hình chính quét tần số Hz 60 ⇄ 120Hz", "Floating overlay scanning display Hz 60 ⇄ 120Hz"))
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
@@ -310,7 +314,7 @@ struct DisplayHzView: View {
 
             // Preview cửa sổ nổi đồng thời làm source view chuẩn cho PiP
             VStack(alignment: .leading, spacing: 6) {
-                Text(lang.tr("Xem trước cửa sổ nổi:", "Floating window preview:"))
+                Text(lang.tr("Xem trước cửa sổ nổi (Đang quét Hz):", "Floating window preview (Scanning Hz):"))
                     .font(.caption2)
                     .foregroundColor(.secondary)
 
@@ -332,7 +336,7 @@ struct DisplayHzView: View {
                     Image(systemName: pipManager.isPiPActive ? "pip.exit" : "pip.enter")
                     Text(pipManager.isPiPActive
                          ? lang.tr("Tắt Cửa Sổ Nổi", "Stop Floating PiP")
-                         : lang.tr("Bật Cửa Sổ Nổi (PiP)", "Start Floating PiP"))
+                         : lang.tr("Bật Cửa Sổ Nổi (PiP Quét Hz)", "Start PiP (Hz Scanner)"))
                         .fontWeight(.semibold)
                 }
                 .frame(maxWidth: .infinity)
@@ -348,16 +352,16 @@ struct DisplayHzView: View {
 
             // Hướng dẫn test nhanh
             VStack(alignment: .leading, spacing: 4) {
-                Text(lang.tr("Cách test tần số quét 120Hz:", "How to test 120Hz refresh rate:"))
+                Text(lang.tr("Cách test quét tần số Hz ngoài màn hình:", "How to test Hz scanning on Home Screen:"))
                     .font(.caption.bold())
                     .foregroundColor(.primary)
-                Text(lang.tr("1. Nhấn nút 'Bật Cửa Sổ Nổi (PiP)' ở trên.", "1. Tap 'Start Floating PiP' above."))
+                Text(lang.tr("1. Nhấn nút 'Bật Cửa Sổ Nổi (PiP Quét Hz)' ở trên.", "1. Tap 'Start PiP (Hz Scanner)' above."))
                     .font(.caption2)
                     .foregroundColor(.secondary)
                 Text(lang.tr("2. Vuốt thanh gạt về Màn hình chính (Home) hoặc mở app bất kỳ.", "2. Swipe back to Home screen or open any application."))
                     .font(.caption2)
                     .foregroundColor(.secondary)
-                Text(lang.tr("3. Để yên máy FPS sẽ giảm xuống để tiết kiệm pin; vuốt lướt liên tục sẽ nhảy vọt lên 120 FPS!", "3. When idle, FPS drops to save battery; swipe rapidly to see it jump to 120 FPS!"))
+                Text(lang.tr("3. Cửa sổ nổi quét liên tục tần số Hz: khi để yên sẽ hạ thấp, khi vuốt lướt sẽ tăng lên 60/120 Hz!", "3. Floating HUD actively scans display Hz: idle drops, swiping boosts to 60/120 Hz!"))
                     .font(.caption2)
                     .foregroundColor(.secondary)
             }

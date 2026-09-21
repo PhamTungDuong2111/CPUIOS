@@ -9,7 +9,9 @@ import SwiftUI
 final class FloatingMonitorData: ObservableObject {
     static let shared = FloatingMonitorData()
 
+    @Published var hz: Int = 60
     @Published var fps: Int = 60
+    @Published var exactHz: Double = 60.0
     @Published var cpuPercent: Int = 0
     @Published var cpuFreqMHz: Int = 4046
     @Published var uploadSpeed: String = "0.0 B/s"
@@ -48,7 +50,7 @@ final class FloatingMonitorData: ObservableObject {
         lastDisplayTimestamp = 0
         fpsSmoothingBuffer = []
 
-        // CADisplayLink đo FPS mượt theo tần số quét thật của màn hình (hỗ trợ 10 - 120Hz)
+        // CADisplayLink đo chính xác tần số quét thật của màn hình (hỗ trợ 10 - 120Hz)
         let link = CADisplayLink(target: self, selector: #selector(handleDisplayFrame(_:)))
         if #available(iOS 15.0, *) {
             let maxHz = Float(max(UIScreen.main.maximumFramesPerSecond, 120))
@@ -79,18 +81,19 @@ final class FloatingMonitorData: ObservableObject {
         defer { lastDisplayTimestamp = link.timestamp }
         guard lastDisplayTimestamp != 0 else { return }
 
-        // Tính FPS từ khoảng cách giữa 2 khung hình liên tiếp
+        // Tính tần số Hz từ khoảng cách giữa 2 khung hình liên tiếp
         let delta = link.timestamp - lastDisplayTimestamp
         guard delta > 0 else { return }
 
-        let instantFPS = 1.0 / delta
-        fpsSmoothingBuffer.append(instantFPS)
+        let instantHz = 1.0 / delta
+        fpsSmoothingBuffer.append(instantHz)
         if fpsSmoothingBuffer.count > 6 {
             fpsSmoothingBuffer.removeFirst()
         }
         let avg = fpsSmoothingBuffer.reduce(0, +) / Double(fpsSmoothingBuffer.count)
+        self.exactHz = avg
 
-        // Làm tròn đến các mức ProMotion chuẩn: 120, 90, 80, 60, 48, 30
+        // Làm tròn đến các mức tần số quét chuẩn của màn hình iOS: 120, 90, 80, 60, 48, 30
         let roundedHz: Int
         if avg >= 105 {
             roundedHz = 120
@@ -100,44 +103,47 @@ final class FloatingMonitorData: ObservableObject {
             roundedHz = 80
         } else if avg >= 50 {
             roundedHz = 60
+        } else if avg >= 35 {
+            roundedHz = 40
         } else {
             roundedHz = max(Int(round(avg)), 30)
         }
 
-        if self.fps != roundedHz {
+        if self.hz != roundedHz || self.fps != roundedHz {
+            self.hz = roundedHz
             self.fps = roundedHz
         }
     }
 
     private func updateMetrics() {
-        // Uptime (hours:minutes:seconds.tenths)
+        // Đồng hồ đếm giờ hiển thị trên HUD
         let elapsed = Date().timeIntervalSince(sessionStartTime)
         let totalSeconds = Int(elapsed)
         let hours = totalSeconds / 3600
         let minutes = (totalSeconds % 3600) / 60
         let seconds = totalSeconds % 60
-        let tenths = Int((elapsed - Double(totalSeconds)) * 10)
-        uptimeString = String(format: "%d:%02d:%02d.%d", hours, minutes, seconds, tenths)
+        let tenths = Int((elapsed.truncatingRemainder(dividingBy: 1.0)) * 10)
+        self.uptimeString = String(format: "%d:%02d:%02d.%d", hours, minutes, seconds, tenths)
 
-        // CPU %
+        // Mức sử dụng CPU %
         let cpu = SystemInfoService.currentCPUUsagePercent()
         self.cpuPercent = Int(round(min(max(cpu, 0), 100)))
 
-        // RAM %
+        // Mức sử dụng RAM %
         let mem = SystemInfoService.currentMemoryInfo()
         if mem.totalGB > 0 {
             let usedPercent = (mem.usedGB / mem.totalGB) * 100
             self.ramPercent = Int(round(usedPercent))
         }
 
-        // Network Speed
+        // Tốc độ mạng
         let speed = NetworkSpeedService.shared.currentSpeed()
         self.uploadSpeed = speed.uploadFormatted
         self.downloadSpeed = speed.downloadFormatted
     }
 }
 
-// MARK: - Silent Audio Player to prevent iOS from suspending PiP in background
+// MARK: - Silent Audio Player để duy trì PiP hoạt động nền không bị ngắt
 final class SilentAudioPlayer {
     static let shared = SilentAudioPlayer()
     private var audioPlayer: AVAudioPlayer?
@@ -189,7 +195,7 @@ final class SilentAudioPlayer {
     }
 }
 
-// MARK: - PiP Manager with AVPictureInPictureVideoCallViewController
+// MARK: - Quản lý PiP với AVPictureInPictureVideoCallViewController
 final class PiPFloatingMonitorManager: NSObject, ObservableObject, AVPictureInPictureControllerDelegate {
     static let shared = PiPFloatingMonitorManager()
 
@@ -243,7 +249,6 @@ final class PiPFloatingMonitorManager: NSObject, ObservableObject, AVPictureInPi
 
             let pip = AVPictureInPictureController(contentSource: contentSource)
             pip.delegate = self
-            // Chỉ kích hoạt tự động inline khi người dùng đã chủ động bật PiP
             pip.canStartPictureInPictureAutomaticallyFromInline = false
             self.pipController = pip
             statusMessage = "Đã sẵn sàng mở cửa sổ nổi PiP."
