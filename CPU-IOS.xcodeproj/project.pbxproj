@@ -25,6 +25,7 @@
 		000000000000000000000042 /* NetworkSpeedService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000041 /* NetworkSpeedService.swift */; };
 		000000000000000000000044 /* PiPFloatingMonitorManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000043 /* PiPFloatingMonitorManager.swift */; };
 		000000000000000000000046 /* FloatingMonitorHUDView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000045 /* FloatingMonitorHUDView.swift */; };
+		000000000000000000000048 /* LanguageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 000000000000000000000047 /* LanguageManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		000000000000000000000041 /* NetworkSpeedService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NetworkSpeedService.swift"; sourceTree = "<group>"; };
 		000000000000000000000043 /* PiPFloatingMonitorManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PiPFloatingMonitorManager.swift"; sourceTree = "<group>"; };
 		000000000000000000000045 /* FloatingMonitorHUDView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FloatingMonitorHUDView.swift"; sourceTree = "<group>"; };
+		000000000000000000000047 /* LanguageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "LanguageManager.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 				000000000000000000000011 /* BatteryService.swift */,
 				000000000000000000000041 /* NetworkSpeedService.swift */,
 				000000000000000000000043 /* PiPFloatingMonitorManager.swift */,
+				000000000000000000000047 /* LanguageManager.swift */,
 			);
 			path = "Services";
 			sourceTree = "<group>";
@@ -218,6 +221,7 @@
 				000000000000000000000042 /* NetworkSpeedService.swift in Sources */,
 				000000000000000000000044 /* PiPFloatingMonitorManager.swift in Sources */,
 				000000000000000000000046 /* FloatingMonitorHUDView.swift in Sources */,
+				000000000000000000000048 /* LanguageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -430,3 +434,4 @@
 	};
 	rootObject = 000000000000000000000020 /* Project object */;
 }
+

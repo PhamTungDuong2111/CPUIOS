@@ -2,6 +2,7 @@ import SwiftUI
 
 struct DeviceInfoView: View {
     private let device: DeviceModel
+    @ObservedObject private var lang = LanguageManager.shared
 
     init() {
         let identifier = DeviceIdentifier.hardwareIdentifier()
@@ -11,27 +12,47 @@ struct DeviceInfoView: View {
     var body: some View {
         NavigationView {
             List {
-                Section("Thiết bị") {
-                    infoRow("Tên thương mại", device.marketingName)
-                    infoRow("Model identifier", device.identifier)
+                Section(lang.tr("Thiết bị", "Device")) {
+                    infoRow(lang.tr("Tên thương mại", "Marketing Name"), device.marketingName)
+                    infoRow(lang.tr("Mã định danh model", "Model Identifier"), device.identifier)
                 }
-                Section("Chip") {
-                    infoRow("Chip", device.chip)
-                    infoRow("Tiến trình", device.process)
+                Section(lang.tr("Vi xử lý (Chip)", "Processor (Chip)")) {
+                    infoRow(lang.tr("Tên Chip", "Chip"), device.chip)
+                    infoRow(lang.tr("Tiến trình", "Process"), device.process)
                     if device.maxClockGHz > 0 {
-                        infoRow("Xung nhịp tối đa", String(format: "%.2f GHz", device.maxClockGHz))
+                        infoRow(lang.tr("Xung nhịp tối đa", "Peak Clock"), String(format: "%.2f GHz", device.maxClockGHz))
                     }
                 }
-                Section("Màn hình") {
-                    infoRow("Tần số quét tối đa", "\(device.maxRefreshRateHz) Hz")
+                Section(lang.tr("Màn hình", "Display")) {
+                    infoRow(lang.tr("Tần số quét tối đa", "Max Refresh Rate"), "\(device.maxRefreshRateHz) Hz")
                 }
                 Section {
-                    Text("Model identifier lấy qua sysctlbyname(\"hw.machine\") — API POSIX công khai. Tên/chip/tiến trình lấy từ bảng tra nội bộ DeviceDatabase.json vì Apple không cung cấp API trả trực tiếp các thông tin này.")
+                    Text(lang.tr(
+                        "Mã định danh model lấy qua sysctlbyname(\"hw.machine\") — API POSIX công khai. Tên/chip/tiến trình đối soát từ cơ sở dữ liệu DeviceDatabase.json.",
+                        "Model identifier retrieved via sysctlbyname(\"hw.machine\") — public POSIX API. Chip/process details matched from DeviceDatabase.json."
+                    ))
                         .font(.caption)
                         .foregroundColor(.secondary)
                 }
             }
-            .navigationTitle("Device")
+            .navigationTitle(lang.tr("Thiết Bị", "Device"))
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        lang.toggleLanguage()
+                    }) {
+                        HStack(spacing: 4) {
+                            Text(lang.currentLanguage.flag)
+                            Text(lang.currentLanguage.shortCode)
+                                .font(.caption.bold())
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.green.opacity(0.15))
+                        .cornerRadius(8)
+                    }
+                }
+            }
         }
     }
 

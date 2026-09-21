@@ -25,38 +25,39 @@ final class SystemMetricsTimer: ObservableObject {
 
 struct CPUMemoryView: View {
     @StateObject private var metrics = SystemMetricsTimer()
+    @ObservedObject private var lang = LanguageManager.shared
     private let coreCount = SystemInfoService.coreCount
 
     var body: some View {
         NavigationView {
             List {
-                Section("CPU") {
+                Section(lang.tr("Vi Xử Lý (CPU)", "CPU Processor")) {
                     HStack {
-                        Text("Số nhân")
+                        Text(lang.tr("Số nhân", "Cores"))
                         Spacer()
                         Text("\(coreCount)").foregroundColor(.secondary)
                     }
                     HStack {
-                        Text("Mức sử dụng")
+                        Text(lang.tr("Mức sử dụng", "Usage"))
                         Spacer()
                         Text("\(metrics.cpuUsage, specifier: "%.1f")%").foregroundColor(.secondary)
                     }
                     ProgressView(value: min(metrics.cpuUsage, 100), total: 100)
                         .tint(.green)
                 }
-                Section("RAM") {
+                Section(lang.tr("Bộ Nhớ RAM", "RAM Memory")) {
                     HStack {
-                        Text("Tổng")
+                        Text(lang.tr("Tổng dung lượng", "Total"))
                         Spacer()
                         Text(String(format: "%.2f GB", metrics.memory.totalGB)).foregroundColor(.secondary)
                     }
                     HStack {
-                        Text("Đang dùng")
+                        Text(lang.tr("Đang sử dụng", "Used"))
                         Spacer()
                         Text(String(format: "%.2f GB", metrics.memory.usedGB)).foregroundColor(.secondary)
                     }
                     HStack {
-                        Text("Còn trống")
+                        Text(lang.tr("Còn trống", "Free"))
                         Spacer()
                         Text(String(format: "%.2f GB", metrics.memory.freeGB)).foregroundColor(.secondary)
                     }
@@ -64,7 +65,24 @@ struct CPUMemoryView: View {
                         .tint(.blue)
                 }
             }
-            .navigationTitle("CPU / RAM")
+            .navigationTitle(lang.tr("CPU / RAM", "CPU / RAM"))
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
+                        lang.toggleLanguage()
+                    }) {
+                        HStack(spacing: 4) {
+                            Text(lang.currentLanguage.flag)
+                            Text(lang.currentLanguage.shortCode)
+                                .font(.caption.bold())
+                        }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.green.opacity(0.15))
+                        .cornerRadius(8)
+                    }
+                }
+            }
             .onAppear { metrics.start() }
             .onDisappear { metrics.stop() }
         }

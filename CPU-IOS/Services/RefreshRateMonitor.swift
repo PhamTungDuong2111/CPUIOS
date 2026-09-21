@@ -3,24 +3,18 @@ import QuartzCore
 import UIKit
 import Combine
 
-/// TÍNH NĂNG CỐT LÕI của app.
-///
+/// TÍNH NĂNG CỐT LÕI:
 /// Đo tần số quét thực tế của màn hình theo thời gian thực bằng CADisplayLink.
-/// CADisplayLink được hệ thống gọi đúng mỗi lần panel vẽ khung hình mới, nên
-/// khoảng cách thời gian giữa 2 lần gọi liên tiếp chính là chu kỳ quét thật.
-///
-/// Trên thiết bị ProMotion (iPhone 13 Pro trở lên, iPad Pro 120Hz), hệ điều
-/// hành tự động điều chỉnh Hz theo nội dung: màn hình tĩnh -> Hz thấp (tiết
-/// kiệm pin), có chuyển động/scroll -> Hz tăng dần tới tối đa (60/80/90/120Hz
-/// tuỳ máy) — đây chính là hiện tượng "đôi lúc lên 120Hz" trong video mẫu.
+/// Hỗ trợ màn hình ProMotion với tần số quét tối đa lên đến 120Hz.
 final class RefreshRateMonitor: ObservableObject {
 
     @Published private(set) var currentHz: Double = 0
     @Published private(set) var minHz: Double = 0
     @Published private(set) var maxObservedHz: Double = 0
-    @Published private(set) var maximumDeviceHz: Int = 60
+    @Published private(set) var maximumDeviceHz: Int = 120 // Hỗ trợ tối đa 120Hz
     @Published private(set) var isProMotionCapable: Bool = false
-    @Published private(set) var samples: [Double] = []   // để vẽ mini biểu đồ
+    @Published private(set) var frameTimeMs: Double = 0    // Độ trễ khung hình tính bằng ms (8.33ms ở 120Hz)
+    @Published private(set) var samples: [Double] = []     // Dữ liệu vẽ đồ thị dao động
 
     private var displayLink: CADisplayLink?
     private var lastTimestamp: CFTimeInterval = 0
@@ -29,7 +23,7 @@ final class RefreshRateMonitor: ObservableObject {
 
     private let smoothingWindow = 8
     private let maxSampleHistory = 50
-    private let uiUpdateInterval: CFTimeInterval = 0.08 // Cập nhật UI ~12 lần/giây để chống đơ nghẽn Main Thread
+    private let uiUpdateInterval: CFTimeInterval = 0.06 // Cập nhật UI ~16 lần/giây mượt mà
 
     init() {
         determineDeviceCapabilities()
@@ -40,9 +34,10 @@ final class RefreshRateMonitor: ObservableObject {
         let identifier = DeviceIdentifier.hardwareIdentifier()
         let device = DeviceDatabaseService.shared.lookup(identifier: identifier)
 
-        let isProMotion = screenMax > 60 || device.maxRefreshRateHz > 60
+        let isProMotion = screenMax >= 120 || device.maxRefreshRateHz >= 120
         self.isProMotionCapable = isProMotion
-        self.maximumDeviceHz = max(screenMax, isProMotion ? 120 : 60)
+        // Tần số tối đa: 120Hz nếu hỗ trợ ProMotion hoặc cấu hình tối đa 120Hz
+        self.maximumDeviceHz = isProMotion ? 120 : max(screenMax, 60)
     }
 
     func start() {
@@ -51,6 +46,7 @@ final class RefreshRateMonitor: ObservableObject {
         currentHz = 0
         minHz = 0
         maxObservedHz = 0
+        frameTimeMs = 0
         samples = []
         smoothingBuffer = []
         lastTimestamp = 0
@@ -58,13 +54,12 @@ final class RefreshRateMonitor: ObservableObject {
 
         let link = CADisplayLink(target: self, selector: #selector(handleFrame(_:)))
 
-        // Cho phép CADisplayLink bám sát tần số quét phần cứng (hỗ trợ 10 - 120Hz)
+        // Yêu cầu CADisplayLink mở rộng dải tần số quét từ 10Hz đến tối đa 120Hz
         if #available(iOS 15.0, *) {
-            let maxFPS = Float(max(maximumDeviceHz, 120))
             link.preferredFrameRateRange = CAFrameRateRange(
                 minimum: 10,
-                maximum: maxFPS,
-                preferred: maxFPS
+                maximum: 120,
+                preferred: 120
             )
         }
         link.add(to: .main, forMode: .common)
@@ -85,37 +80,37 @@ final class RefreshRateMonitor: ObservableObject {
 
         let instantHz = 1.0 / delta
 
-        // Lọc nhiễu bằng trung bình trượt ngắn gọn
+        // Lọc nhiễu bằng trung bình trượt ngắn
         smoothingBuffer.append(instantHz)
         if smoothingBuffer.count > smoothingWindow {
             smoothingBuffer.removeFirst()
         }
         let averaged = smoothingBuffer.reduce(0, +) / Double(smoothingBuffer.count)
 
-        // Cập nhật min/max nội bộ ngay lập tức
-        if averaged >= 20 {
+        // Cập nhật min/max tức thì (giới hạn tối đa 120Hz)
+        let clampedHz = min(max(averaged, 0), 120.0)
+        if clampedHz >= 10 {
             if minHz == 0 {
-                minHz = averaged
-            } else if averaged < minHz {
-                minHz = averaged
+                minHz = clampedHz
+            } else if clampedHz < minHz {
+                minHz = clampedHz
             }
         }
-        if averaged > maxObservedHz {
-            maxObservedHz = min(averaged, Double(maximumDeviceHz) * 1.05)
+        if clampedHz > maxObservedHz {
+            maxObservedHz = clampedHz
         }
 
-        // ĐIỀU TIẾT CẬP NHẬT UI (Throttling):
-        // Chỉ kích hoạt thông báo @Published cho SwiftUI theo chu kỳ uiUpdateInterval hoặc khi có bước nhảy vọt,
-        // giúp giải phóng 95% CPU render của Main Thread, ngăn chặn triệt để tình trạng máy bị đơ cứng.
+        // Điều tiết cập nhật UI (Throttling) để giải phóng CPU render cho Main Thread
         let timeSinceLastUIUpdate = link.timestamp - lastUIUpdateTimestamp
-        let significantJump = abs(averaged - currentHz) > 15
+        let significantJump = abs(clampedHz - currentHz) > 10
 
         if timeSinceLastUIUpdate >= uiUpdateInterval || significantJump {
             lastUIUpdateTimestamp = link.timestamp
 
-            self.currentHz = averaged
+            self.currentHz = clampedHz
+            self.frameTimeMs = clampedHz > 0 ? (1000.0 / clampedHz) : 0
 
-            self.samples.append(averaged)
+            self.samples.append(clampedHz)
             if self.samples.count > self.maxSampleHistory {
                 self.samples.removeFirst()
             }

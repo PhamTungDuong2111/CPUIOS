@@ -1,19 +1,29 @@
 import SwiftUI
 
 struct ContentView: View {
+    @ObservedObject private var lang = LanguageManager.shared
+
     var body: some View {
         TabView {
             DisplayHzView()
-                .tabItem { Label("Display Hz", systemImage: "waveform.path.ecg") }
+                .tabItem {
+                    Label(lang.tr("Tần Số Hz", "Display Hz"), systemImage: "waveform.path.ecg")
+                }
 
             DeviceInfoView()
-                .tabItem { Label("Device", systemImage: "iphone") }
+                .tabItem {
+                    Label(lang.tr("Thiết Bị", "Device"), systemImage: "iphone")
+                }
 
             CPUMemoryView()
-                .tabItem { Label("CPU/RAM", systemImage: "cpu") }
+                .tabItem {
+                    Label(lang.tr("CPU / RAM", "CPU / RAM"), systemImage: "cpu")
+                }
 
             BatteryView()
-                .tabItem { Label("Battery", systemImage: "battery.100") }
+                .tabItem {
+                    Label(lang.tr("Pin", "Battery"), systemImage: "battery.100")
+                }
         }
         .tint(.green)
     }

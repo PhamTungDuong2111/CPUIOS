@@ -1,108 +1,70 @@
-# CPU-IOS (App mẫu kiểu CPU-X cho iOS)
+# CPU-IOS (App Giám Sát Phần Cứng & Đo Tần Số Quét Màn Hình 120Hz cho iOS)
 
-App mẫu SwiftUI minh hoạ cách xây dựng một ứng dụng thông tin phần cứng/hệ thống
-kiểu **CPU-X**, với tính năng cốt lõi là **đo tần số quét màn hình theo thời gian
-thực (Hz)** — giống video ProMotion nhảy 60 ⇄ 120Hz mà bạn gửi.
+Ứng dụng iOS Native hoàn chỉnh bằng **SwiftUI** theo phong cách **CPU-X**, tích hợp tính năng cốt lõi: **đo tần số quét màn hình theo thời gian thực (lên đến 120Hz ProMotion)** và **nút chuyển đổi ngôn ngữ song ngữ Tiếng Việt / Tiếng Anh**.
 
-> Đây là **source code mẫu** (không phải file .xcodeproj build sẵn, vì file
-> .xcodeproj nhị phân do người viết tay ngoài Xcode rất dễ hỏng). Cách mở nhanh
-> nhất mất khoảng 2 phút, xem mục "Cách chạy" bên dưới.
+---
 
-## Tính năng đã làm trong bản mẫu này
+## 🌟 Tính năng nổi bật
 
-| Tab | Nội dung | API dùng |
+| Tính năng | Mô tả chi tiết | Công nghệ / API |
 |---|---|---|
-| **Display Hz** (cốt lõi) | Đo Hz thực tế của màn hình theo thời gian thực, min/max/hiện tại, phát hiện ProMotion | `CADisplayLink`, `UIScreen.maximumFramesPerSecond` |
-| **Cửa sổ nổi PiP** (theo video) | Cửa sổ nhỏ nổi trên màn hình chính đo FPS 60 ⇄ 120Hz theo thao tác vuốt, CPU %, RAM %, tốc độ mạng, xung nhịp Freq (4046MHz) | `AVPictureInPictureVideoCallViewController`, `AVAudioSession` |
-| Device Info | Model identifier (vd `iPhone16,2`), tên thương mại, chip, tiến trình, tra từ database nội bộ | `uname()/sysctlbyname("hw.machine")` + JSON lookup |
-| CPU & RAM | Số nhân CPU, % CPU dùng, RAM tổng/dùng/free | `sysctl(hw.ncpu)`, `host_processor_info`, `host_statistics64` |
-| Battery | % pin, trạng thái sạc | `UIDevice.current` |
+| **Đo màn hình (Tối đa 120Hz)** | Đồng hồ đo vòng cung (Speedometer Gauge 0 - 120Hz), hiển thị tần số quét thực tế, cao nhất đạt được (Peak 120Hz), thấp nhất, tối đa máy và độ trễ khung hình (`Frame Time: ~8.33ms`). | `CADisplayLink`, `UIScreen.maximumFramesPerSecond`, `CAFrameRateRange` |
+| **Đổi ngôn ngữ (VI / EN)** | Nút chuyển đổi ngôn ngữ nhanh chóng (`🇻🇳 VI` / `🇺🇸 EN`) ngay trên thanh công cụ, lưu trạng thái tức thì vào `UserDefaults`. | `LanguageManager`, SwiftUI `@ObservedObject` |
+| **Cửa sổ nổi PiP (Picture-in-Picture)** | Cửa sổ HUD nổi bên ngoài màn hình chính hiển thị FPS (60 ⇄ 120Hz), mức CPU, RAM, tốc độ mạng tải lên/tải xuống và xung nhịp vi xử lý. | `AVPictureInPictureVideoCallViewController`, `AVAudioSession` |
+| **Bài test kích hoạt 120 FPS** | Chạy chuỗi hoạt họa tốc độ cao và khu vực vuốt chạm tương tác để ép hệ thống kích hoạt tần số quét 120Hz ProMotion tối đa. | SwiftUI Animation, Gesture, CADisplayLink |
+| **Thông tin thiết bị (Device Info)** | Nhận diện mã máy, tên thương mại, vi xử lý, tiến trình sản xuất và tần số quét tối đa hỗ trợ từ cơ sở dữ liệu. | `sysctlbyname("hw.machine")`, `DeviceDatabase.json` |
+| **Giám sát CPU & RAM** | Số nhân CPU, mức % sử dụng vi xử lý, dung lượng RAM tổng, đang dùng và còn trống theo thời gian thực. | `host_processor_info`, `mach_host_self`, `host_statistics64` |
+| **Tình trạng Pin (Battery)** | Mức phần trăm pin và trạng thái sạc (Đang sạc, Đầy, Rút sạc). | `UIDevice.batteryLevel`, `UIDevice.batteryState` |
 
-## Vì sao đo được Hz mà không cần private API
+---
 
-iOS không cho app đọc trực tiếp "tần số quét hiện tại của panel" như một con số
-hệ thống. Cách CPU-X (và các app đo Hz như "Blur Busters UFO Test", "Is My Phone
-120Hz") thực sự làm là:
+## 🛠 Cách đo tần số quét màn hình (tối đa 120Hz)
 
-1. Gắn một `CADisplayLink` — callback này được hệ thống gọi **đúng mỗi lần màn
-   hình vẽ lại một khung hình**, tức là tần số gọi callback ≈ tần số quét thật
-   của panel tại thời điểm đó.
-2. Đo khoảng thời gian `Δt` giữa 2 lần gọi liên tiếp (`link.timestamp`).
-3. `Hz tức thời = 1 / Δt`.
-4. Trên máy hỗ trợ ProMotion (`UIScreen.main.maximumFramesPerSecond > 60`, ví dụ
-   iPhone 13 Pro trở lên), hệ điều hành **tự động hạ Hz khi nội dung tĩnh** (tiết
-   kiệm pin) và **tăng lên khi có chuyển động/scroll/animation** — đây chính là
-   hiện tượng "đôi lúc lên 120Hz" trong video bạn gửi. Vì vậy app có một hoạt ảnh
-   nhỏ (kim đồng hồ đo xoay liên tục) để "ép" hệ thống bộc lộ Hz tối đa thật sự;
-   nếu bạn để màn hình tĩnh hoàn toàn, Hz sẽ tụt về mức thấp (thường 60 hoặc thấp
-   hơn) — đúng hành vi thật của ProMotion, không phải lỗi.
-5. Toàn bộ API trên đều là **API công khai** của Apple, không đụng tới private
-   API/Device Fingerprinting → an toàn khi nộp App Store.
+1. Ứng dụng khởi tạo `CADisplayLink` liên kết trực tiếp với chu kỳ quét màn hình của hệ điều hành.
+2. Với iOS 15 trở lên, dải tần số `preferredFrameRateRange` được cấu hình từ 10Hz đến tối đa 120Hz:
+   ```swift
+   link.preferredFrameRateRange = CAFrameRateRange(minimum: 10, maximum: 120, preferred: 120)
+   ```
+3. Thời gian giữa 2 lần cập nhật khung hình `Δt = link.timestamp - lastTimestamp` cho ra tần số quét thực tế: `Hz = 1.0 / Δt`.
+4. Độ trễ hiển thị khung hình: `Frame Time = 1000.0 / Hz` (ở 120Hz tương ứng ~8.33ms).
+5. Đồng hồ đo Speedometer Gauge hiển thị dải 0 - 120Hz với các mốc chuẩn 60Hz và 120Hz ProMotion.
 
-Trên máy KHÔNG có ProMotion (Hz cố định 60), app vẫn hiển thị đúng nhưng số Hz sẽ
-luôn quanh 60, không dao động — vì phần cứng không hỗ trợ.
+---
 
-## Cấu trúc thư mục
+## 📁 Cấu trúc thư mục mã nguồn
 
 ```
 CPU-IOS/
+├── CPU-IOS.xcodeproj/
+│   └── project.pbxproj               # Cấu hình dự án Xcode
 └── CPU-IOS/
-    ├── CPUIOSApp.swift              # Entry point
-    ├── ContentView.swift            # TabView chính (giống layout CPU-X)
+    ├── CPUIOSApp.swift                # Điểm khởi chạy @main SwiftUI
+    ├── ContentView.swift              # TabView chính & Nút đổi ngôn ngữ (VI/EN)
     ├── Models/
-    │   ├── DeviceModel.swift        # Struct mô tả 1 thiết bị trong database
-    │   └── DeviceDatabase.json      # Bảng tra hw.machine -> tên/chip/tiến trình
+    │   ├── DeviceModel.swift          # Cấu trúc dữ liệu thiết bị
+    │   └── DeviceDatabase.json        # Dữ liệu tra cứu iPhone / iPad
     ├── Services/
-    │   ├── DeviceIdentifier.swift   # Lấy hw.machine qua sysctlbyname/uname
-    │   ├── DeviceDatabaseService.swift # Load + tra JSON ở trên
-    │   ├── SystemInfoService.swift  # CPU (%), RAM (host_statistics64), số nhân
-    │   ├── RefreshRateMonitor.swift # <-- TÍNH NĂNG CỐT LÕI: đo Hz màn hình
-    │   └── BatteryService.swift     # % pin, trạng thái sạc
+    │   ├── LanguageManager.swift      # Quản lý ngôn ngữ Tiếng Việt / Tiếng Anh
+    │   ├── RefreshRateMonitor.swift   # Bộ đo tần số quét màn hình (lên đến 120Hz)
+    │   ├── PiPFloatingMonitorManager.swift # Cửa sổ nổi PiP giám sát 120Hz
+    │   ├── DeviceIdentifier.swift     # Lấy mã phần cứng hw.machine
+    │   ├── DeviceDatabaseService.swift# Tra cứu cơ sở dữ liệu thiết bị
+    │   ├── SystemInfoService.swift    # Đo CPU & RAM
+    │   ├── NetworkSpeedService.swift  # Đo tốc độ mạng
+    │   └── BatteryService.swift       # Đo pin
     └── Views/
-        ├── DisplayHzView.swift      # Màn hình đo Hz (tab đầu tiên)
-        ├── DeviceInfoView.swift
-        ├── CPUMemoryView.swift
-        └── BatteryView.swift
+        ├── DisplayHzView.swift        # Màn hình đo Hz & Speedometer Gauge (0 - 120Hz)
+        ├── FloatingMonitorHUDView.swift# Giao diện HUD của cửa sổ nổi PiP
+        ├── DeviceInfoView.swift       # Màn hình thông tin thiết bị
+        ├── CPUMemoryView.swift        # Màn hình CPU & RAM
+        └── BatteryView.swift          # Màn hình Pin
 ```
 
-## Cách chạy (30 giây)
+---
 
-Đây giờ là **project Xcode thật** (`.xcodeproj`), không cần dựng project mới hay
-kéo thả file thủ công nữa:
+## 🚀 Hướng dẫn mở và chạy trên macOS (Xcode)
 
-1. Giải nén, double-click **`CPU-IOS.xcodeproj`** để mở thẳng trong Xcode
-   (yêu cầu Xcode 15/16, khuyến nghị chạy trên macOS thật vì Xcode không có
-   trên Windows/Linux).
-2. Chọn target **CPU-IOS** (đã có sẵn scheme) và một thiết bị/simulator ở
-   thanh trên cùng.
-3. Nhấn **Cmd+R** để build & chạy. Xcode sẽ tự cấp Bundle Identifier tạm
-   (`com.dd.CPU-IOS`) — nếu chạy trên máy thật, vào tab **Signing & Capabilities**
-   của target, chọn **Team** cá nhân của bạn (Apple ID miễn phí là đủ để chạy
-   thử trên máy mình) rồi Xcode tự ký lại.
-4. Chạy trên **thiết bị thật** để thấy đúng hiệu ứng. Lưu ý: Simulator luôn báo
-   cứng 60Hz vì không mô phỏng phần cứng màn hình thật — muốn thấy dao động
-   60↔120Hz như video, phải chạy trên máy thật có ProMotion (iPhone 13 Pro trở
-   lên, iPad Pro 120Hz...).
-5. Vào tab **Display Hz**, để yên vài giây rồi thử vuốt/chạm màn hình — số Hz sẽ
-   nhảy lên theo tương tác, giống hệt video bạn gửi.
-
-> Ghi chú kỹ thuật: project dùng cơ chế **`GENERATE_INFOPLIST_FILE = YES`** của
-> Xcode hiện đại nên không có file `Info.plist` tường minh trong thư mục nguồn —
-> Xcode tự sinh lúc build, không ảnh hưởng gì đến việc mở/chạy project.
-
-## Việc còn lại để "lên mức app thật" (không nằm trong bản mẫu)
-
-- Mở rộng `DeviceDatabase.json` cho đầy đủ mọi model iPhone/iPad qua các đời.
-- Cơ chế cập nhật database từ xa (remote config) để không phải chờ duyệt bản
-  build mới mỗi khi Apple ra máy mới.
-- Thêm các tab test cảm biến (camera, mic, loa, haptic, la bàn) bằng
-  AVFoundation/CoreMotion/CoreHaptics.
-- WidgetKit hiển thị pin/RAM trống ngoài màn hình chính.
-
-## Giới hạn cần biết
-
-- Hz đo được là **Hz thực tế của khung hình đang vẽ trên màn hình tại thời
-  điểm đó**, không phải "Hz tối đa lý thuyết của chip" — đây cũng chính xác là
-  cách app CPU-X và các app đo Hz khác hoạt động, không có API nào của Apple trả
-  về "Hz hiện tại" như một con số tĩnh.
-- Chạy trong Simulator sẽ luôn ra ~60Hz cố định, không phản ánh phần cứng thật.
+1. Mở file **`CPU-IOS.xcodeproj`** bằng **Xcode 15.0+** trên máy Mac.
+2. Chọn target **CPU-IOS** và thiết bị chạy (khuyến nghị chạy trên **thiết bị iPhone/iPad Pro thật có màn hình 120Hz ProMotion** để trải nghiệm đầy đủ).
+3. Nhấn **Cmd + R** để biên dịch và chạy ứng dụng.
+4. Nhấn nút chuyển đổi ngôn ngữ `🇻🇳 VI` / `🇺🇸 EN` ở góc trên bên phải thanh công cụ để đổi ngôn ngữ tức thì.
