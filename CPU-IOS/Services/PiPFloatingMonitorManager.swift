@@ -12,6 +12,7 @@ final class FloatingMonitorData: ObservableObject {
     @Published var hz: Int = 60
     @Published var fps: Int = 60
     @Published var exactHz: Double = 60.0
+    @Published var isProMotion: Bool = false
     @Published var cpuPercent: Int = 0
     @Published var cpuFreqMHz: Int = 4046
     @Published var uploadSpeed: String = "0.0 B/s"
@@ -32,6 +33,9 @@ final class FloatingMonitorData: ObservableObject {
     func refreshHardwareInfo() {
         let identifier = DeviceIdentifier.hardwareIdentifier()
         let device = DeviceDatabaseService.shared.lookup(identifier: identifier)
+        let screenMax = UIScreen.main.maximumFramesPerSecond
+        self.isProMotion = screenMax >= 120 || device.maxRefreshRateHz >= 120
+
         if device.identifier.hasPrefix("iPhone18,") {
             self.cpuFreqMHz = 4250
         } else if device.identifier == "iPhone17,1" || device.identifier == "iPhone17,2" {
@@ -55,7 +59,7 @@ final class FloatingMonitorData: ObservableObject {
         if #available(iOS 15.0, *) {
             let maxHz = Float(max(UIScreen.main.maximumFramesPerSecond, 120))
             link.preferredFrameRateRange = CAFrameRateRange(
-                minimum: 10,
+                minimum: 60,
                 maximum: maxHz,
                 preferred: maxHz
             )
@@ -81,29 +85,34 @@ final class FloatingMonitorData: ObservableObject {
         defer { lastDisplayTimestamp = link.timestamp }
         guard lastDisplayTimestamp != 0 else { return }
 
-        // Tính tần số Hz từ khoảng cách giữa 2 khung hình liên tiếp
+        // 1. Khoảng cách thời gian callback
         let delta = link.timestamp - lastDisplayTimestamp
-        guard delta > 0 else { return }
 
-        let instantHz = 1.0 / delta
+        // 2. Chu kỳ quét phần cứng mà compositor hệ điều hành phân bổ cho khung hình này
+        let frameDuration = link.targetTimestamp - link.timestamp
+
+        let hardwareRate = frameDuration > 0 ? (1.0 / frameDuration) : 60.0
+        let callbackRate = delta > 0 ? (1.0 / delta) : hardwareRate
+
+        // Tần số quét thực tế tức thời (tối đa 120Hz)
+        let instantHz = min(max(hardwareRate, callbackRate), 120.0)
+
         fpsSmoothingBuffer.append(instantHz)
-        if fpsSmoothingBuffer.count > 6 {
+        if fpsSmoothingBuffer.count > 5 {
             fpsSmoothingBuffer.removeFirst()
         }
         let avg = fpsSmoothingBuffer.reduce(0, +) / Double(fpsSmoothingBuffer.count)
         self.exactHz = avg
 
-        // Làm tròn đến các mức tần số quét chuẩn của màn hình iOS: 120, 90, 80, 60, 48, 30
+        // Nhảy lên 120Hz ngay lập tức khi phát hiện chuyển động vuốt/chạm trên iPhone 16 Pro Max
         let roundedHz: Int
-        if avg >= 105 {
+        if instantHz >= 95 || avg >= 95 {
             roundedHz = 120
-        } else if avg >= 85 {
-            roundedHz = 90
-        } else if avg >= 70 {
+        } else if instantHz >= 75 || avg >= 75 {
             roundedHz = 80
-        } else if avg >= 50 {
+        } else if instantHz >= 50 || avg >= 50 {
             roundedHz = 60
-        } else if avg >= 35 {
+        } else if instantHz >= 35 || avg >= 35 {
             roundedHz = 40
         } else {
             roundedHz = max(Int(round(avg)), 30)
@@ -116,7 +125,6 @@ final class FloatingMonitorData: ObservableObject {
     }
 
     private func updateMetrics() {
-        // Đồng hồ đếm giờ hiển thị trên HUD
         let elapsed = Date().timeIntervalSince(sessionStartTime)
         let totalSeconds = Int(elapsed)
         let hours = totalSeconds / 3600
@@ -125,18 +133,15 @@ final class FloatingMonitorData: ObservableObject {
         let tenths = Int((elapsed.truncatingRemainder(dividingBy: 1.0)) * 10)
         self.uptimeString = String(format: "%d:%02d:%02d.%d", hours, minutes, seconds, tenths)
 
-        // Mức sử dụng CPU %
         let cpu = SystemInfoService.currentCPUUsagePercent()
         self.cpuPercent = Int(round(min(max(cpu, 0), 100)))
 
-        // Mức sử dụng RAM %
         let mem = SystemInfoService.currentMemoryInfo()
         if mem.totalGB > 0 {
             let usedPercent = (mem.usedGB / mem.totalGB) * 100
             self.ramPercent = Int(round(usedPercent))
         }
 
-        // Tốc độ mạng
         let speed = NetworkSpeedService.shared.currentSpeed()
         self.uploadSpeed = speed.uploadFormatted
         self.downloadSpeed = speed.downloadFormatted
@@ -226,6 +231,7 @@ final class PiPFloatingMonitorManager: NSObject, ObservableObject, AVPictureInPi
             let hudView = FloatingMonitorHUDView()
             let hosting = UIHostingController(rootView: hudView)
             hosting.view.backgroundColor = .clear
+            hosting.overrideUserInterfaceStyle = .dark // Đảm bảo luôn giữ giao diện tối công nghệ cao không bị bạc màu
 
             callVC.addChild(hosting)
             callVC.view.addSubview(hosting.view)

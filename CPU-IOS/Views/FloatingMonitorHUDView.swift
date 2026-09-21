@@ -1,23 +1,25 @@
 import SwiftUI
 
 /// Giao diện HUD hiển thị trong cửa sổ nổi PiP (Picture-in-Picture)
-/// Tích hợp tính năng QUÉT TẦN SỐ HZ MÀN HÌNH (Hz Scanner) nổi bật cùng CPU, RAM, Mạng
+/// Tích hợp tính năng QUÉT TẦN SỐ HZ MÀN HÌNH (Hz Scanner) lên đến 120Hz cho iPhone 16 Pro Max
 struct FloatingMonitorHUDView: View {
     @ObservedObject var data = FloatingMonitorData.shared
     @ObservedObject private var lang = LanguageManager.shared
 
+    @State private var scanPulse: Bool = false
+
     var body: some View {
         ZStack {
-            // Nền kính mờ công nghệ cao (Frosted glass HUD) với viền phát sáng theo tần số Hz
+            // Nền đen kính mờ công nghệ cao (Deep frosted dark HUD) chống chói, sắc nét 100% kể cả chế độ Sáng
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color(UIColor.secondarySystemBackground).opacity(0.90))
+                .fill(Color(red: 0.08, green: 0.09, blue: 0.12).opacity(0.95))
                 .overlay(
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
                         .stroke(
                             data.hz >= 100
-                                ? Color.green.opacity(0.5)
-                                : (data.hz >= 60 ? Color.yellow.opacity(0.3) : Color.white.opacity(0.2)),
-                            lineWidth: 1.2
+                                ? Color.green.opacity(0.7)
+                                : (data.hz >= 60 ? Color.yellow.opacity(0.35) : Color.white.opacity(0.2)),
+                            lineWidth: data.hz >= 100 ? 1.5 : 1.0
                         )
                 )
 
@@ -29,15 +31,16 @@ struct FloatingMonitorHUDView: View {
                         .foregroundColor(.green)
                     Text(data.uptimeString)
                         .font(.system(size: 10, weight: .bold, design: .monospaced))
-                        .foregroundColor(.primary)
+                        .foregroundColor(.white)
 
                     Spacer()
 
                     // HUY HIỆU QUÉT TẦN SỐ HZ (Hz Scanner Badge)
                     HStack(spacing: 3) {
-                        Image(systemName: "waveform.path.ecg")
+                        Image(systemName: data.hz >= 100 ? "bolt.fill" : "waveform.path.ecg")
                             .font(.system(size: 9, weight: .bold))
                             .foregroundColor(hzColor(data.hz))
+                            .scaleEffect(scanPulse ? 1.15 : 0.95)
 
                         Text("\(data.hz) Hz")
                             .font(.system(size: 11, weight: .black, design: .rounded))
@@ -45,15 +48,15 @@ struct FloatingMonitorHUDView: View {
                     }
                     .padding(.horizontal, 6)
                     .padding(.vertical, 2)
-                    .background(hzColor(data.hz).opacity(0.18))
+                    .background(hzColor(data.hz).opacity(0.22))
                     .cornerRadius(6)
                 }
-                .padding(.horizontal, 34) // Chừa khoảng cách an toàn cho nút X và nút mở rộng hệ thống của PiP
+                .padding(.horizontal, 34) // Chừa lề an toàn cho nút X và nút mở rộng hệ thống của PiP
                 .padding(.top, 4)
 
                 // Đường phân cách mờ
                 Rectangle()
-                    .fill(Color.gray.opacity(0.2))
+                    .fill(Color.white.opacity(0.12))
                     .frame(height: 0.5)
                     .padding(.horizontal, 6)
 
@@ -64,9 +67,10 @@ struct FloatingMonitorHUDView: View {
                         HStack(spacing: 3) {
                             Image(systemName: "wifi")
                                 .font(.system(size: 8))
-                                .foregroundColor(.blue)
+                                .foregroundColor(.cyan)
                             Text("↑: \(data.uploadSpeed)")
                                 .font(.system(size: 9.5, weight: .medium, design: .monospaced))
+                                .foregroundColor(.white.opacity(0.9))
                                 .lineLimit(1)
                         }
 
@@ -76,16 +80,17 @@ struct FloatingMonitorHUDView: View {
                                 .foregroundColor(.green)
                             Text("↓: \(data.downloadSpeed)")
                                 .font(.system(size: 9.5, weight: .medium, design: .monospaced))
+                                .foregroundColor(.white.opacity(0.9))
                                 .lineLimit(1)
                         }
 
                         HStack(spacing: 2) {
                             Text("Freq:")
                                 .font(.system(size: 9.5, weight: .regular))
-                                .foregroundColor(.secondary)
+                                .foregroundColor(.white.opacity(0.6))
                             Text("\(data.cpuFreqMHz)MHz")
                                 .font(.system(size: 9.5, weight: .semibold, design: .monospaced))
-                                .foregroundColor(.primary)
+                                .foregroundColor(.white)
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -95,30 +100,32 @@ struct FloatingMonitorHUDView: View {
                         HStack(spacing: 2) {
                             Text("CPU:")
                                 .font(.system(size: 9.5, weight: .regular))
-                                .foregroundColor(.secondary)
+                                .foregroundColor(.white.opacity(0.6))
                             Text("\(data.cpuPercent)%")
                                 .font(.system(size: 9.5, weight: .semibold, design: .monospaced))
+                                .foregroundColor(.white)
                         }
 
                         // QUÉT TẦN SỐ HZ CHÍNH XÁC (Hz Scanner readout)
                         HStack(spacing: 2) {
                             Text("Hz:")
                                 .font(.system(size: 9.5, weight: .bold))
-                                .foregroundColor(.secondary)
+                                .foregroundColor(.white.opacity(0.7))
                             Text("\(data.hz)")
-                                .font(.system(size: 13, weight: .black, design: .rounded))
+                                .font(.system(size: 13.5, weight: .black, design: .rounded))
                                 .foregroundColor(hzColor(data.hz))
                             Text("Hz")
                                 .font(.system(size: 8.5, weight: .bold))
-                                .foregroundColor(hzColor(data.hz).opacity(0.8))
+                                .foregroundColor(hzColor(data.hz).opacity(0.85))
                         }
 
                         HStack(spacing: 2) {
                             Text("RAM:")
                                 .font(.system(size: 9.5, weight: .regular))
-                                .foregroundColor(.secondary)
+                                .foregroundColor(.white.opacity(0.6))
                             Text("\(data.ramPercent)%")
                                 .font(.system(size: 9.5, weight: .semibold, design: .monospaced))
+                                .foregroundColor(.white)
                         }
                     }
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -130,11 +137,15 @@ struct FloatingMonitorHUDView: View {
                     Circle()
                         .fill(hzColor(data.hz))
                         .frame(width: 4, height: 4)
-                    Text(lang.tr("Đang quét tần số Hz màn hình...", "Scanning display Hz..."))
+                    Text(data.hz >= 100
+                         ? lang.tr("Đang kích hoạt ProMotion 120Hz!", "ProMotion 120Hz Active!")
+                         : lang.tr("Đang quét tần số Hz màn hình...", "Scanning display Hz..."))
                         .font(.system(size: 7.5, weight: .medium))
-                        .foregroundColor(.secondary)
+                        .foregroundColor(data.hz >= 100 ? .green : .white.opacity(0.6))
                     Spacer()
-                    Text(data.hz >= 100 ? "120Hz PRO" : (data.hz >= 60 ? "60Hz STD" : "\(data.hz)Hz"))
+                    Text(data.hz >= 100
+                         ? "⚡ 120Hz PRO"
+                         : (data.isProMotion ? "\(data.hz)Hz PRO" : "\(data.hz)Hz STD"))
                         .font(.system(size: 7.5, weight: .bold, design: .monospaced))
                         .foregroundColor(hzColor(data.hz))
                 }
@@ -143,6 +154,12 @@ struct FloatingMonitorHUDView: View {
             }
         }
         .frame(width: 220, height: 110)
+        .preferredColorScheme(.dark)
+        .onAppear {
+            withAnimation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true)) {
+                scanPulse = true
+            }
+        }
     }
 
     private func hzColor(_ hz: Int) -> Color {

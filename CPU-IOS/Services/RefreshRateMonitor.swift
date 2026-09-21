@@ -5,7 +5,7 @@ import Combine
 
 /// TÍNH NĂNG CỐT LÕI:
 /// Đo tần số quét thực tế của màn hình theo thời gian thực bằng CADisplayLink.
-/// Hỗ trợ màn hình ProMotion với tần số quét tối đa lên đến 120Hz.
+/// Hỗ trợ màn hình ProMotion với tần số quét tối đa lên đến 120Hz (iPhone 13 Pro -> 16 Pro Max).
 final class RefreshRateMonitor: ObservableObject {
 
     @Published private(set) var currentHz: Double = 0
@@ -21,9 +21,9 @@ final class RefreshRateMonitor: ObservableObject {
     private var lastUIUpdateTimestamp: CFTimeInterval = 0
     private var smoothingBuffer: [Double] = []
 
-    private let smoothingWindow = 8
+    private let smoothingWindow = 6
     private let maxSampleHistory = 50
-    private let uiUpdateInterval: CFTimeInterval = 0.06 // Cập nhật UI ~16 lần/giây mượt mà
+    private let uiUpdateInterval: CFTimeInterval = 0.05
 
     init() {
         determineDeviceCapabilities()
@@ -36,7 +36,6 @@ final class RefreshRateMonitor: ObservableObject {
 
         let isProMotion = screenMax >= 120 || device.maxRefreshRateHz >= 120
         self.isProMotionCapable = isProMotion
-        // Tần số tối đa: 120Hz nếu hỗ trợ ProMotion hoặc cấu hình tối đa 120Hz
         self.maximumDeviceHz = isProMotion ? 120 : max(screenMax, 60)
     }
 
@@ -54,10 +53,10 @@ final class RefreshRateMonitor: ObservableObject {
 
         let link = CADisplayLink(target: self, selector: #selector(handleFrame(_:)))
 
-        // Yêu cầu CADisplayLink mở rộng dải tần số quét từ 10Hz đến tối đa 120Hz
+        // Yêu cầu CADisplayLink ưu tiên tần số quét 120Hz trên màn hình ProMotion
         if #available(iOS 15.0, *) {
             link.preferredFrameRateRange = CAFrameRateRange(
-                minimum: 10,
+                minimum: 60,
                 maximum: 120,
                 preferred: 120
             )
@@ -75,10 +74,14 @@ final class RefreshRateMonitor: ObservableObject {
         defer { lastTimestamp = link.timestamp }
         guard lastTimestamp != 0 else { return }
 
+        // 1. Khoảng cách thời gian callback
         let delta = link.timestamp - lastTimestamp
-        guard delta > 0 else { return }
 
-        let instantHz = 1.0 / delta
+        // 2. Chu kỳ quét phần cứng mà compositor hệ điều hành phân bổ
+        let frameDuration = link.targetTimestamp - link.timestamp
+        let hardwareRate = frameDuration > 0 ? (1.0 / frameDuration) : 60.0
+        let callbackRate = delta > 0 ? (1.0 / delta) : hardwareRate
+        let instantHz = min(max(hardwareRate, callbackRate), 120.0)
 
         // Lọc nhiễu bằng trung bình trượt ngắn
         smoothingBuffer.append(instantHz)
@@ -87,30 +90,36 @@ final class RefreshRateMonitor: ObservableObject {
         }
         let averaged = smoothingBuffer.reduce(0, +) / Double(smoothingBuffer.count)
 
-        // Cập nhật min/max tức thì (giới hạn tối đa 120Hz)
+        // Nhảy lên 120Hz ngay khi phát hiện tần số cao trên ProMotion
         let clampedHz = min(max(averaged, 0), 120.0)
-        if clampedHz >= 10 {
-            if minHz == 0 {
-                minHz = clampedHz
-            } else if clampedHz < minHz {
-                minHz = clampedHz
-            }
-        }
-        if clampedHz > maxObservedHz {
-            maxObservedHz = clampedHz
+        let displayHz: Double
+        if instantHz >= 95 || clampedHz >= 95 {
+            displayHz = 120.0
+        } else {
+            displayHz = clampedHz
         }
 
-        // Điều tiết cập nhật UI (Throttling) để giải phóng CPU render cho Main Thread
+        if displayHz >= 10 {
+            if minHz == 0 {
+                minHz = displayHz
+            } else if displayHz < minHz {
+                minHz = displayHz
+            }
+        }
+        if displayHz > maxObservedHz {
+            maxObservedHz = displayHz
+        }
+
         let timeSinceLastUIUpdate = link.timestamp - lastUIUpdateTimestamp
-        let significantJump = abs(clampedHz - currentHz) > 10
+        let significantJump = abs(displayHz - currentHz) > 5
 
         if timeSinceLastUIUpdate >= uiUpdateInterval || significantJump {
             lastUIUpdateTimestamp = link.timestamp
 
-            self.currentHz = clampedHz
-            self.frameTimeMs = clampedHz > 0 ? (1000.0 / clampedHz) : 0
+            self.currentHz = displayHz
+            self.frameTimeMs = displayHz > 0 ? (1000.0 / displayHz) : 0
 
-            self.samples.append(clampedHz)
+            self.samples.append(displayHz)
             if self.samples.count > self.maxSampleHistory {
                 self.samples.removeFirst()
             }
